@@ -6,7 +6,7 @@ module.exports = function (grunt) {
     // Load NPM Tasks
     require('load-grunt-tasks')(grunt);
     grunt.initConfig({
-
+        pkg: grunt.file.readJSON('package.json'),
         jshint: {
             files: ['app/**/*.js'],
             options: {
@@ -45,6 +45,7 @@ module.exports = function (grunt) {
             },
             options: {
                 report : 'gzip',
+                banner: '/*!\n * <%= pkg.name %> v<%= pkg.version %> by <%= pkg.author%>\n * License : <%= pkg.license %>\n * Build : <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
         },
 
@@ -65,7 +66,7 @@ module.exports = function (grunt) {
                 options: {
                   livereload: true,
                 },
-                files: ['app/**/*','dist/**/*'],
+                files: ['app/**/*'],
             }
         },
 
@@ -74,7 +75,7 @@ module.exports = function (grunt) {
                 browsers : ['last 2 version']
             },
             no_dest: {
-                src: 'app/*.css'
+                src: 'dev/*.css'
             }
         },
 
@@ -95,7 +96,7 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     port: 1337,
-                    base: 'app',
+                    base: 'dev',
                     hostname: ''
                 }
             }
@@ -122,7 +123,7 @@ module.exports = function (grunt) {
                         ]
                 },
                 files: {
-                    'dev-breakshots/': ['app/*.html']
+                    'dev-breakshots/': ['dev/*.html']
                 },
             },
             dist : {
@@ -144,22 +145,62 @@ module.exports = function (grunt) {
             },
         },
 
+        imagemin : {
+            compile: {
+                options: {
+                    optimizationLevel: 4,
+                    progressive: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: "dist/images",
+                        src: ["**/*.{png,jpg,jpeg,gif,svg}"],
+                        dest: "dist/images"
+                    }
+                ]
+            }
+        },
+
+        // concat : {
+        //     dev: { files: '<%= config.scripts %>' }
+        // },
+
+        copy : {
+            dev: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: "app/",
+                        src: ["**"],
+                        dest: "dev/"
+                    }
+                ]
+            },
+        }
+
     });
 
 
     // Prod
     grunt.registerTask('dist', function(){
-        grunt.task.run('uglify', 'autoprefixer', 'cssmin:dist');
+        grunt.task.run('uglify', 'autoprefixer', 'cssmin:dist','imagemin:compile');
     });
 
     // Dev
     grunt.registerTask('dev', function(){
-        grunt.task.run('connect:server', 'open:localhost', 'watch','autoprefixer');
+        grunt.task.run('copy:dev', 'connect:server', 'open:localhost', 'watch','autoprefixer');
     });
 
 
+    // Take screenshots with breakpoints (rwd)
     grunt.registerTask('shots:dev', function(){
         grunt.task.run('connect:server','breakshots:dev');
+    });
+
+    // Take screenshots with breakpoints (rwd)
+    grunt.registerTask('shots:dist', function(){
+        grunt.task.run('connect:server','breakshots:dist');
     });
 
 };

@@ -35,7 +35,8 @@
     "grunt-contrib-connect": "~0.5.0",
     "grunt-open": "~0.2.2",
     "jshint-stylish": "~0.1.4",
-    "grunt-breakshots": "~0.2.0"
+    "grunt-breakshots": "~0.2.0",
+    "grunt-contrib-imagemin": "~0.4.0"
   },
   "readmeFilename": "README.md"
 }
