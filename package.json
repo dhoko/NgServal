@@ -33,7 +33,9 @@
     "time-grunt": "~0.2.3",
     "grunt-contrib-cssmin": "~0.7.0",
     "grunt-contrib-connect": "~0.5.0",
-    "grunt-open": "~0.2.2"
+    "grunt-open": "~0.2.2",
+    "jshint-stylish": "~0.1.4",
+    "grunt-breakshots": "~0.2.0"
   },
   "readmeFilename": "README.md"
 }

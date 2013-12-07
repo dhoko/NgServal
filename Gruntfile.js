@@ -5,13 +5,6 @@ module.exports = function (grunt) {
 
     // Load NPM Tasks
     require('load-grunt-tasks')(grunt);
-
-    // var gruntConfig = {
-    //     pkg         : grunt.file.readJSON("package.json"),
-    //     timestamp   : new Date().getTime(),
-    //     cachebuster : '.<%= timestamp %>'
-    // }
-
     grunt.initConfig({
 
         jshint: {
@@ -39,7 +32,8 @@ module.exports = function (grunt) {
                     // General Purpose Libraries
                     $:          true,
                     jQuery:     true,
-                }
+                },
+                reporter: require('jshint-stylish'),
             }
         },
 
@@ -48,7 +42,10 @@ module.exports = function (grunt) {
                 files: {
                     "dist/scripts/main.js" : ['app/scripts/*.js']
                 }
-            }
+            },
+            options: {
+                report : 'gzip',
+            },
         },
 
         watch : {
@@ -84,7 +81,7 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 options: {
-                    report: 'gzip'
+                    report: 'gzip',
                 },
                 files: {
                     'dist/styles.css': [
@@ -108,7 +105,44 @@ module.exports = function (grunt) {
             localhost : {
                 path: 'http://127.0.0.1:1337'
             },
-        }
+        },
+
+        breakshots: {
+            dev : {
+                options: {
+                    url : 'http://127.0.0.1:1337',
+                    ext : 'jpg',
+                    sizes: [
+                            [320,480],
+                            [480,640],
+                            [640,768],
+                            [768,1024],
+                            [1024,1024],
+                            [1200,1024],
+                        ]
+                },
+                files: {
+                    'dev-breakshots/': ['app/*.html']
+                },
+            },
+            dist : {
+                options: {
+                    url : 'http://127.0.0.1:1337',
+                    ext : 'jpg',
+                    sizes: [
+                            [320,480],
+                            [480,640],
+                            [640,768],
+                            [768,1024],
+                            [1024,1024],
+                            [1200,1024],
+                        ]
+                },
+                files: {
+                    'dist-breakshots/': ['dist/*.html']
+                },
+            },
+        },
 
     });
 
@@ -122,4 +156,10 @@ module.exports = function (grunt) {
     grunt.registerTask('dev', function(){
         grunt.task.run('connect:server', 'open:localhost', 'watch','autoprefixer');
     });
+
+
+    grunt.registerTask('shots:dev', function(){
+        grunt.task.run('connect:server','breakshots:dev');
+    });
+
 };
