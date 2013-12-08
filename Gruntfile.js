@@ -184,7 +184,7 @@ module.exports = function (grunt) {
         src: ['dev/**/*.html'], // Source files
         dest: 'dev/', // Destination directory
         flatten: true,
-        cwd: '.'
+        cwd: '.',
         options: {
           silent: true,
         }
@@ -198,7 +198,7 @@ module.exports = function (grunt) {
       options: {
         server: {
           baseDir: "dev"
-        }
+        },
         ghostMode: {
           scroll: true,
           links: true,
@@ -226,7 +226,7 @@ module.exports = function (grunt) {
 
   // Dev
   grunt.registerTask('dev', function(){
-    grunt.task.run('copy:dev', 'connect:server', 'open:localhost', 'watch','autoprefixer');
+    grunt.task.run('build', 'connect:server', 'open:localhost', 'watch','autoprefixer');
   });
 
   grunt.registerTask('mobile', function() {
@@ -235,7 +235,12 @@ module.exports = function (grunt) {
 
   // Assemble templates templates
   grunt.registerTask('build', function(){
-    grunt.task.run('copy:dev', 'includes:html','shell:rsync');
+    grunt.task.run('copy:dev', 'includes:html');
+  });
+
+  // Assemble templates templates
+  grunt.registerTask('push', function(){
+    grunt.task.run('build','shell:rsync');
   });
 
   // Take screenshots with breakpoints (rwd)
