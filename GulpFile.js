@@ -4,7 +4,10 @@ var appPath = 'app/',
     express = require('express'),
     path    = require('path'),
     tinylr  = require('tiny-lr'),
-    open    = require("gulp-open");
+    open    = require("gulp-open"),
+    jscs    = require('gulp-jscs'),
+    jshint  = require('gulp-jshint'),
+    stylish = require('jshint-stylish');
 
 var createServers = function(port, lrport) {
   var lr = tinylr();
@@ -24,10 +27,9 @@ var createServers = function(port, lrport) {
   };
 };
 
-var servers = createServers(8080, 35729);
-
+// Default task : Open url, lauch server, livereaload
 gulp.task('default', function(){
-
+  var servers = createServers(8080, 35729);
   // Open Google Chrome @ localhost:8080
   gulp.src(appPath + 'index.html').pipe(open("",{
     app:"google-chrome",
@@ -38,9 +40,57 @@ gulp.task('default', function(){
   gulp.watch(["./**/*", "!./node_modules/**/*","!GulpFile.js"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
     servers.lr.changed({
-      body: {
-        files: [evt.path]
-      }
+      body: {files: [evt.path]}
     });
+
+    gulp.run(['partials','js']);
   });
 });
+
+gulp.task('js', function(){
+  gulp.src(appPath + "js/**/*.js")
+    .pipe(jscs())
+    .pipe(jshint("./.jshintrc"))
+    .pipe(jshint.reporter("jshint-stylish"));
+});
+
+// Include partials in views
+gulp.task('partials', function(){
+  var fileinclude = require('gulp-file-include');
+  gulp.src(appPath + "**/*.html")
+    .pipe(fileinclude())
+    .pipe(gulp.dest('./_tmpDist/'))
+});
+
+gulp.task('prod', function(){
+  var zip   = require('gulp-zip'),
+      ngmin = require('gulp-ngmin'),
+      uncss = require('gulp-uncss');
+
+  gulp.run(['partials']);
+  // Clean the CSS
+  gulp.src(appPath + "*.css")
+    .pipe(uncss({html: appPath + "**/*.html"}))
+    .pipe(gulp.dest('_tmpDist'));
+
+  // Build Angular for production
+  gulp.src(appPath+'js/**/*')
+    .pipe(ngmin())
+    .pipe(gulp.dest('_tmpDist/js/'));
+
+  // Compress them all
+  gulp.src('_tmpDist/**/*')
+    .pipe(zip('prod.zip'))
+    .pipe(gulp.dest('dist'));
+});
+
+
+gulp.task('deploy', function() {
+  var ftp = require('gulp-ftp');
+  gulp.src('dist/prod.zip')
+    .pipe(ftp({
+      host: 'dhoko',
+      user: 'dhoko',
+      pass: '1234'
+    }));
+})
