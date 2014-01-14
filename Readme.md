@@ -1,6 +1,6 @@
-It works with [Gulp](http://gulpjs.com) *The streaming build system*
+> It works with [Gulp](http://gulpjs.com) *The streaming build system*
 
-## Todo
+## Install it
 
 - Install LiveReload for Chrome [LiveReload Chrome Store](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 - `make install`
