@@ -28,8 +28,13 @@ var servers = createServers(8080, 35729);
 
 gulp.task('default', function(){
 
-  gulp.src(appPath + 'index.html').pipe(open('http://localhost:8080/',{app:"google-chrome"}));
+  // Open Google Chrome @ localhost:8080
+  gulp.src(appPath + 'index.html').pipe(open("",{
+    app:"google-chrome",
+    url: "http://localhost:8080/"
+  }));
 
+  // Watch changes from CSS/JS/HTML ...
   gulp.watch(["./**/*", "!./node_modules/**/*","!GulpFile.js"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
     servers.lr.changed({
