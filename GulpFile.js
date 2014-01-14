@@ -39,14 +39,15 @@ gulp.task('default', function(){
   // Watch changes from CSS/JS/HTML ...
   gulp.watch(["./**/*", "!./node_modules/**/*","!GulpFile.js"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
+    gulp.run(['partials','js']);
     servers.lr.changed({
       body: {files: [evt.path]}
     });
 
-    gulp.run(['partials','js']);
   });
 });
 
+// Clean JS files
 gulp.task('js', function(){
   gulp.src(appPath + "js/**/*.js")
     .pipe(jscs())
@@ -62,6 +63,7 @@ gulp.task('partials', function(){
     .pipe(gulp.dest('./_tmpDist/'))
 });
 
+// Prod them all
 gulp.task('prod', function(){
   var zip   = require('gulp-zip'),
       ngmin = require('gulp-ngmin'),
@@ -86,6 +88,9 @@ gulp.task('prod', function(){
 
 
 gulp.task('deploy', function() {
+
+  gulp.run('prod');
+
   var ftp = require('gulp-ftp');
   gulp.src('dist/prod.zip')
     .pipe(ftp({
