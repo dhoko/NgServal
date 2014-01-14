@@ -16,7 +16,7 @@ var createServers = function(port, lrport) {
   });
 
   var app = express();
-  app.use(express.static(path.resolve('./app/')));
+  app.use(express.static(path.resolve('./build/')));
   app.listen(port, function() {
     gutil.log('Listening on', port);
   });
@@ -37,14 +37,23 @@ gulp.task('default', function(){
   }));
 
   // Watch changes from CSS/JS/HTML ...
-  gulp.watch(["./**/*", "!./node_modules/**/*","!GulpFile.js"], function(evt){
+  gulp.watch(["./**/*", "!./node_modules/**/*","!./GulpFile.js","!./**/*.html"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
-    gulp.run(['partials','js']);
+    gulp.run('js');
+    gulp.run('moveJs');
     servers.lr.changed({
       body: {files: [evt.path]}
     });
-
   });
+
+  gulp.watch(["./**/*.html"], function(evt){
+    gutil.log(gutil.colors.cyan(evt.path), 'changed');
+    gulp.run('partials');
+    servers.lr.changed({
+      body: {files: [evt.path]}
+    });
+  });
+
 });
 
 // Clean JS files
@@ -60,8 +69,19 @@ gulp.task('partials', function(){
   var fileinclude = require('gulp-file-include');
   gulp.src(appPath + "**/*.html")
     .pipe(fileinclude())
-    .pipe(gulp.dest('./_tmpDist/'))
+    .pipe(gulp.dest('./build/'))
 });
+
+gulp.task('moveJs', function(){
+  gulp.src(appPath+'js/**/*')
+    .pipe(gulp.dest('build/js/'));
+  });
+
+gulp.task('serve', function() {
+  gulp.run('partials');
+  gulp.run('moveJs');
+  gulp.run('default');
+})
 
 // Prod them all
 gulp.task('prod', function(){
@@ -74,12 +94,12 @@ gulp.task('prod', function(){
   // Clean the CSS
   gulp.src(appPath + "*.css")
     .pipe(uncss({html: appPath + "**/*.html"}))
-    .pipe(gulp.dest('_tmpDist'));
+    .pipe(gulp.dest('build'));
 
   // Build Angular for production
   gulp.src(appPath+'js/**/*')
     .pipe(ngmin())
-    .pipe(gulp.dest('_tmpDist/js/'));
+    .pipe(gulp.dest('build/js/'));
 });
 
 // Compress them all
@@ -87,7 +107,7 @@ gulp.task('compress', function() {
   var zip       = require('gulp-zip'),
       timestamp = new Date().getTime();
 
-  gulp.src('_tmpDist/**/*')
+  gulp.src('build/**/*')
     .pipe(zip('prod-' + timestamp + '.zip'))
     .pipe(gulp.dest('dist'));
 });
@@ -96,7 +116,7 @@ gulp.task('clean', function(){
   var spawn = require('child_process').spawn
       path  = require("path");
 
-  spawn('rm', ['-r', path.resolve('.') + '/_tmpDist'], {stdio: 'inherit'});
+  spawn('rm', ['-r', path.resolve('.') + '/build'], {stdio: 'inherit'});
 });
 
 // Send them all
