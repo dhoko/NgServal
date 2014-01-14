@@ -65,11 +65,12 @@ gulp.task('partials', function(){
 
 // Prod them all
 gulp.task('prod', function(){
-  var zip   = require('gulp-zip'),
-      ngmin = require('gulp-ngmin'),
-      uncss = require('gulp-uncss');
+  var zip       = require('gulp-zip'),
+      ngmin     = require('gulp-ngmin'),
+      uncss     = require('gulp-uncss'),
+      timestamp = new Date().getTime();
 
-  gulp.run(['partials']);
+  gulp.run('partials');
   // Clean the CSS
   gulp.src(appPath + "*.css")
     .pipe(uncss({html: appPath + "**/*.html"}))
@@ -79,23 +80,39 @@ gulp.task('prod', function(){
   gulp.src(appPath+'js/**/*')
     .pipe(ngmin())
     .pipe(gulp.dest('_tmpDist/js/'));
+});
 
-  // Compress them all
+// Compress them all
+gulp.task('compress', function() {
+  var zip       = require('gulp-zip'),
+      timestamp = new Date().getTime();
+
   gulp.src('_tmpDist/**/*')
-    .pipe(zip('prod.zip'))
+    .pipe(zip('prod-' + timestamp + '.zip'))
     .pipe(gulp.dest('dist'));
 });
 
+gulp.task('clean', function(){
+  var spawn = require('child_process').spawn
+      path  = require("path");
 
+  spawn('rm', ['-r', path.resolve('.') + '/_tmpDist'], {stdio: 'inherit'});
+});
+
+// Send them all
 gulp.task('deploy', function() {
-
-  gulp.run('prod');
-
   var ftp = require('gulp-ftp');
+
+  gulp.run(['prod','compress']);
   gulp.src('dist/prod.zip')
     .pipe(ftp({
       host: 'dhoko',
       user: 'dhoko',
       pass: '1234'
     }));
-})
+
+  gulp.run('clean');
+});
+
+// A test https://npmjs.org/package/gulp-template
+
