@@ -2,8 +2,23 @@
   "name": "Boilerplate",
   "version": "0.0.1",
   "description": "Ng Starter app",
+  "repository": {
+      "type": "git",
+      "url": "git://github.com/dhoko/boilerplate.git"
+    },
+  "keywords": [
+    "html",
+    "JavaScript",
+    "CSS",
+    "Gulp",
+    "angular"
+  ],
   "author": "dhoko",
   "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/dhoko/boilerplate/issues"
+  },
+  "homepage": "https://github.com/dhoko/boilerplate",
   "dependencies": {
     "tiny-lr": "0.0.5",
     "gulp": "~3.2.0",
@@ -20,5 +35,6 @@
     "gulp-file-include": "0.0.3",
     "gulp-ftp": "~0.1.0",
     "gulp-replace": "~0.2.0"
-  }
+  },
+  "readmeFilename": "README.md"
 }
