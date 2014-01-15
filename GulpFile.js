@@ -32,12 +32,18 @@ gulp.task('default', function(){
   var servers = createServers(8080, 35729);
   // Open Google Chrome @ localhost:8080
   gulp.src(appPath + 'index.html').pipe(open("",{
-    app:"google-chrome",
+    // app:"google-chrome",
+    app:"/usr/lib/chromium/chromium",
     url: "http://localhost:8080/"
   }));
 
   // Watch changes from CSS/JS/HTML ...
-  gulp.watch(["./**/*", "!./node_modules/**/*","!./GulpFile.js","!./**/*.html"], function(evt){
+  gulp.watch([
+    "./**/*", "!./node_modules/**/*",
+    "!./app/components/",
+    "!./build/**/*",
+    "!./GulpFile.js",
+    "!./**/*.html"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
     gulp.run('js');
     gulp.run('moveJs');
@@ -135,4 +141,3 @@ gulp.task('deploy', function() {
 });
 
 // A test https://npmjs.org/package/gulp-template
-
