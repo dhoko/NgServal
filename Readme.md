@@ -5,6 +5,7 @@
 - Clone Repository or [download](https://github.com/dhoko/boilerplate/zipball/master)
 - Open a terminal in the folder
 - `make prepare`
+- Install **Sublime Linter** in Sublime Text for JShint
 - Install LiveReload for Chrome [LiveReload Chrome Store](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 - `make install`
 - `gulp serve`
