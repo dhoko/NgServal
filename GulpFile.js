@@ -45,7 +45,6 @@ gulp.task('default', function(){
     "!./GulpFile.js",
     "!./**/*.html"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
-    gulp.run('js');
     gulp.run('moveJs');
     servers.lr.changed({
       body: {files: [evt.path]}
@@ -63,10 +62,10 @@ gulp.task('default', function(){
 });
 
 // Clean JS files
-gulp.task('js', function(){
-  gulp.src(appPath + "js/**/*.js")
-    .pipe(jscs())
-});
+// gulp.task('js', function(){
+//   gulp.src(appPath + "js/**/*.js")
+//     .pipe(jscs())
+// });
 
 // Include partials in views
 gulp.task('partials', function(){
