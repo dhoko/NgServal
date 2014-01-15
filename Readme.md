@@ -7,15 +7,15 @@
 - `git clone git@github.com:dhoko/boilerplate.git [folder]` (replace [folder] with a name, it is the destination folder)
 - `cd [folder]`
 
-### Prepare your environement
+### Prepare your environement (*First time, if you don't have bower|gulp|livereaload*)
 
 - Install **Sublime Linter** in Sublime Text for JShint
 - Install LiveReload for Chrome [LiveReload Chrome Store](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
-- `make prepare`
+- `make prepare` (*Install Gulp and Bower*)
 
 ### Install the boilerplate
 
-- `make install`
+- `make install` (*Install Gulp and bower dependencies*)
 - `gulp serve`
 
 ### Tasks
