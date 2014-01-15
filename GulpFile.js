@@ -46,14 +46,15 @@ gulp.task('default', function(){
     "!./**/*.html"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
     gulp.run('moveJs');
+    gulp.run('moveCss');
     servers.lr.changed({
       body: {files: [evt.path]}
     });
   });
 
   gulp.watch(["./app/**/*.html"], function(evt){
-    gutil.log(gutil.colors.cyan(evt.path), 'changed');
     gulp.run('partials');
+    gutil.log(gutil.colors.cyan(evt.path), 'changed');
     servers.lr.changed({
       body: {files: [evt.path]}
     });
@@ -72,12 +73,17 @@ gulp.task('partials', function(){
   var fileinclude = require('gulp-file-include');
   gulp.src(appPath + "**/*.html")
     .pipe(fileinclude())
-    .pipe(gulp.dest('./build/'))
+    .pipe(gulp.dest('./build/'));
 });
 
 gulp.task('moveJs', function(){
   gulp.src(appPath+'js/**/*')
     .pipe(gulp.dest('build/js/'));
+  });
+
+gulp.task('moveCss', function(){
+  gulp.src(appPath+'**/*.css')
+    .pipe(gulp.dest('build/'));
   });
 
 gulp.task('serve', function() {
