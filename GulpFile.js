@@ -52,7 +52,7 @@ gulp.task('default', function(){
     });
   });
 
-  gulp.watch(["./**/*.html"], function(evt){
+  gulp.watch(["./app/**/*.html"], function(evt){
     gutil.log(gutil.colors.cyan(evt.path), 'changed');
     gulp.run('partials');
     servers.lr.changed({
@@ -66,8 +66,6 @@ gulp.task('default', function(){
 gulp.task('js', function(){
   gulp.src(appPath + "js/**/*.js")
     .pipe(jscs())
-    .pipe(jshint("./.jshintrc"))
-    .pipe(jshint.reporter("jshint-stylish"));
 });
 
 // Include partials in views
@@ -141,3 +139,4 @@ gulp.task('deploy', function() {
 });
 
 // A test https://npmjs.org/package/gulp-template
+
