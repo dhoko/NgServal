@@ -8,7 +8,7 @@
   "boss": true,
   "eqnull": true,
   "browser": true,
-  "strict": true,
+  "strict": false,
   "trailing": true,
   "smarttabs": true,
   "maxparams": 3,
@@ -16,9 +16,9 @@
   "globals": {
     "console": true,
     "module": true,
-
+    "require": true
+    "angular": true,
     "$": true,
-    "jQuery": true,
-    "angular": true
+    "jQuery": true
   }
 }
