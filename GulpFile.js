@@ -1,147 +1,105 @@
-var appPath = 'app/',
-    gulp    = require('gulp'),
-    gutil   = require('gulp-util'),
-    express = require('express'),
-    path    = require('path'),
-    tinylr  = require('tiny-lr'),
-    open    = require("gulp-open"),
-    jscs    = require('gulp-jscs'),
-    jshint  = require('gulp-jshint'),
-    stylish = require('jshint-stylish');
+var path        = require('path'),
+    express     = require('express'),
+    bodyParser  = require('body-parser'),
+    tinylr      = require('tiny-lr'),
+    gulp        = require('gulp'),
+    gutil       = require('gulp-util'),
+    concat      = require("gulp-concat"),
+    partials    = require('gulp-partial-to-script'),
+    livereload  = require('gulp-livereload'),
+    server      = tinylr(),
+    openBrowser = require('./tasks/open'),
+    streamqueue = require('streamqueue'),
+    watchify    = require("watchify"),
+    source      = require('vinyl-source-stream');
 
-var createServers = function(port, lrport) {
-  var lr = tinylr();
-  lr.listen(lrport, function() {
-    gutil.log('LR Listening on', lrport);
-  });
-
-  var app = express();
-  app.use(express.static(path.resolve('./build/')));
-  app.listen(port, function() {
-    gutil.log('Listening on', port);
-  });
-
-  return {
-    lr: lr,
-    app: app
-  };
-};
+/**
+ * Create a watcher for a glob it can activate livereload too
+ * @param  {Glob} path
+ * @param  {Array} task  Task to launch
+ * @param  {Boolean} watch Activate a watch for livereloadq
+ */
+function watchThemAll(path, task, watch) {
+    var watcher = gulp.watch(path,task);
+    if(watch) {
+        watcher.on("change", function(file) {
+            gutil.log('File updated', gutil.colors.yellow(file.path));
+            livereload(server).changed(file.path);
+        });
+    }
+}
 
 // Default task : Open url, lauch server, livereaload
-gulp.task('default', function(){
-  var servers = createServers(8080, 35729);
+gulp.task('default',['assets','vendor','layout','templates','scripts','styles','i18n'], function() {
+
   // Open Google Chrome @ localhost:8080
-  gulp.src(appPath + 'index.html').pipe(open("",{
-    // app:"google-chrome",
-    app:"/usr/lib/chromium/chromium",
-    url: "http://localhost:8080/"
-  }));
+    openBrowser();
 
-  // Watch changes from CSS/JS/HTML ...
-  gulp.watch([
-    "./**/*", "!./node_modules/**/*",
-    "!./app/components/",
-    "!./build/**/*",
-    "!./GulpFile.js",
-    "!./**/*.html"], function(evt){
-    gutil.log(gutil.colors.cyan(evt.path), 'changed');
-    gulp.run('moveJs');
-    gulp.run('moveCss');
-    servers.lr.changed({
-      body: {files: [evt.path]}
+    var app = express();
+
+    app.use(bodyParser());
+    app.use(express.static(path.resolve('./')));
+    app.listen(8080, function() {
+      gutil.log('Listening on', 8080);
     });
-  });
 
-  gulp.watch(["./app/**/*.html"], function(evt){
-    gulp.run('partials');
-    gutil.log(gutil.colors.cyan(evt.path), 'changed');
-    servers.lr.changed({
-      body: {files: [evt.path]}
+    // Proxy for our request
+    app.all("/apitest", function(req,res) {
+        console.log();
+        console.log(req.body);
+        console.log();
+        res.send(201);
     });
-  });
+
+    // Livereload listener
+    server.listen(35729, function (err) {
+        if (err) {
+            throw err;
+        }
+
+        watchThemAll("./app/scripts/**/partials/*.html", ["templates"],true);
+        watchThemAll("./app/layout/*.html", ["layout"],true);
+        watchThemAll("./app/styles/*.css", ["styles"],true);
+        watchThemAll("./i18n/**/*.yml", ["i18n"],true);
+    });
 
 });
 
-// Clean JS files
-// gulp.task('js', function(){
-//   gulp.src(appPath + "js/**/*.js")
-//     .pipe(jscs())
-// });
+// Concatenate your partials and append them to index.html
+gulp.task('templates', require('./tasks/templates'));
 
-// Include partials in views
-gulp.task('partials', function(){
-  var fileinclude = require('gulp-file-include');
-  gulp.src(appPath + "**/*.html")
-    .pipe(fileinclude())
-    .pipe(gulp.dest('./build/'));
+// Concatenate your partials and append them to index.html
+gulp.task('layout', require('./tasks/layout'));
+
+// Concatenate your app and build an app.js
+gulp.task('scripts', function() {
+    require('./tasks/app')(server);
 });
 
-gulp.task('moveJs', function(){
-  gulp.src(appPath+'js/**/*')
-    .pipe(gulp.dest('build/js/'));
-  });
+// Build my css
+gulp.task('styles', require('./tasks/styles'));
 
-gulp.task('moveCss', function(){
-  gulp.src(appPath+'**/*.css')
-    .pipe(gulp.dest('build/'));
-  });
+// Build our assets
+gulp.task('assets',require('./tasks/assets'));
 
-gulp.task('serve', function() {
-  gulp.run('partials');
-  gulp.run('moveJs');
-  gulp.run('default');
-})
+// Build your vendors
+gulp.task('vendor', require("./tasks/vendor"));
 
-// Prod them all
-gulp.task('prod', function(){
-  var zip       = require('gulp-zip'),
-      ngmin     = require('gulp-ngmin'),
-      uncss     = require('gulp-uncss'),
-      timestamp = new Date().getTime();
+// Create i18n file for the app
+gulp.task("i18n",require("./tasks/i18n"));
 
-  gulp.run('partials');
-  // Clean the CSS
-  gulp.src(appPath + "*.css")
-    .pipe(uncss({html: appPath + "**/*.html"}))
-    .pipe(gulp.dest('build'));
-
-  // Build Angular for production
-  gulp.src(appPath+'js/**/*')
-    .pipe(ngmin())
-    .pipe(gulp.dest('build/js/'));
+// Generate your documentation using docker
+gulp.task('doc', function(){
+  var spawn = require('child_process').spawn;
+  spawn('docker', ['-i','./src','-x','vendor','-n'], {stdio: 'inherit'});
 });
 
-// Compress them all
-gulp.task('compress', function() {
-  var zip       = require('gulp-zip'),
-      timestamp = new Date().getTime();
 
-  gulp.src('build/**/*')
-    .pipe(zip('prod-' + timestamp + '.zip'))
-    .pipe(gulp.dest('dist'));
+// Set our env to production
+gulp.task('env', function(){
+    gutil.env.type = 'prod';
 });
-
-gulp.task('clean', function(){
-  var spawn = require('child_process').spawn
-      path  = require("path");
-
-  spawn('rm', ['-r', path.resolve('.') + '/build'], {stdio: 'inherit'});
+// Prod all the things !
+gulp.task('prod',['env','assets','vendor','templates','scripts','styles','manifest','i18n'], function() {
+    gulp.start("doc");
 });
-
-// Send them all
-gulp.task('deploy', function() {
-  var ftp = require('gulp-ftp');
-
-  gulp.run(['prod','compress']);
-  gulp.src('dist/prod.zip')
-    .pipe(ftp({
-      host: 'dhoko',
-      user: 'dhoko',
-      pass: '1234'
-    }));
-
-  gulp.run('clean');
-});
-
-// A test https://npmjs.org/package/gulp-template
-
