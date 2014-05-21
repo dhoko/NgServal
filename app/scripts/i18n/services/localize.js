@@ -51,6 +51,9 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
             return i18n.data[lang || i18n.current];
         },
 
+        current: function current() {
+            return i18n.current;
+        },
         update: setTranslation
     }
 }];

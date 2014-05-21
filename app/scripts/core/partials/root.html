@@ -1,11 +1,11 @@
 <div class="page-root">
 
     <ul class="i18n-nav" ng-repeat="lang in languages">
-        <li class="i18n-item"><button type="button" i18n-load="{{lang}}" class="btn-i18n">{{lang}}</button></li>
+        <li class="i18n-item"><button type="button" i18n-load="{{lang}}" class="btn-i18n">{{lang  | translate:lang:"lang" }}</button></li>
     </ul>
     <h1>{{ title }}</h1>
     <i>{{ baseline }} <b>{{ baselineInfo }}</b></i>
-    <p>{{ includes }}</p>
+    <p data-i18n-bind="includes" data-i18n-bind-lang="fr-FR"></p>
     <ul>
         <li>Gulp</li>
         <li>Backbone.js</li>
