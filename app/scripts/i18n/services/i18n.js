@@ -1,3 +1,8 @@
+/**
+ * I18n Service
+ * Load your translations and update $rootScope
+ * It gives you access to your translation.
+ */
 module.exports = ['$rootScope', '$http', function($rootScope, $http) {
 
     var i18n = {

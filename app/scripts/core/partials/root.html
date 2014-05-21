@@ -1,7 +1,7 @@
 <div class="page-root">
 
     <ul class="i18n-nav" ng-repeat="lang in languages">
-        <li class="i18n-item"><button type="button" data-i18n="{{lang}}" class="btn-i18n">{{lang}}</button></li>
+        <li class="i18n-item"><button type="button" i18n-load="{{lang}}" class="btn-i18n">{{lang}}</button></li>
     </ul>
     <h1>{{ title }}</h1>
     <i>{{ baseline }} <b>{{ baselineInfo }}</b></i>
@@ -27,6 +27,6 @@
 
    {{ aboutLink }} <a href="#home">{{ buttonMsg }}</a> <i>{{ aboutAnchor }}</i> {{ aboutLink2 }}.
 
-    <br><br><button ng-click="open('welcome')" type="button" class="btn-action-x" data-page-dest="home">{{ buttonMsg }}</button>
+    <br><br><button open-page="welcome" type="button" class="btn-action-x" data-page-dest="home">{{ buttonMsg }}</button>
 
 </div>
