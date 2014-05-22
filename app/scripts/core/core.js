@@ -1,6 +1,7 @@
 var i18n = require('../i18n/i18n');
     helpers = require('../helpers/helpers');
 
+// i18n.value("custom", {url:"XXX"});
 var core = angular.module('ngServal', ['ui.router','i18n','helpers']);
 
 core.config(require('./coreConfig'))

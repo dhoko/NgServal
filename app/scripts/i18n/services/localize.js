@@ -3,7 +3,7 @@
  * Load your translations and update $rootScope
  * It gives you access to your translation.
  */
-module.exports = ['$rootScope', '$http', function($rootScope, $http) {
+module.exports = ['$rootScope', '$http','custom', function($rootScope, $http, custom) {
 
     var i18n = {
         current: "",
@@ -11,7 +11,28 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         available: [],
         currentState: "",
         active: false
+    }
+
+    /**
+     * Default configuration for the module
+     * @type {Object}
+     */
+    var config = {
+        lang: 'en-EN',
+        url: "/i18n/languages.json",
+        namespace: "",
+        lazy: false,
+        urls: [
+            {
+                lang: "",
+                url: ""
+            }
+        ],
+        current: ""
     };
+
+    angular.extend(config, custom);
+
 
     /**
      * Load a translation to the $scope
@@ -60,20 +81,53 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         console.log('[i18n-i18n@loadLanguage] Update APP language from %s to %s', (old + '-' + old.toUpperCase()),lang);
     }
 
-    $rootScope.$on('i18n:localize:changed', function(e, data) {
+    /**
+     * Load your url from lazy mode
+     * @return {String} url
+     */
+    function loadLazyDefaultUrl() {
+
+        var url = config.url;
+        if(config.lazy) {
+            url = config.urls.filter(function (o) {
+                return o.lang === config.lang;
+            })[0].url;
+        }
+        return url;
+    }
+
+    // Listen when you change the language in your application
+    $rootScope.$on('i18n:localize:changed', function() {
         setTranslation(i18n.currentState);
     });
 
-    return {
-        load: function load(url) {
-            return $http.get(url || '/i18n/languages.json')
+    var service = {
+
+        load: function load(url, name) {
+
+                url = url || loadLazyDefaultUrl();
+
+            console.log(url)
+
+            var lang = config.lang || document.documentElement.lang + '-' + document.documentElement.lang.toUpperCase();
+
+            return $http.get(url)
                 .error(function() {
                     alert("Cannot load i18n translation file");
                 })
                 .success(function (data) {
+
+                    if(config.lazy) {
+                        config.current = name;
+                    }
                     i18n.data = data;
-                    i18n.current = document.documentElement.lang + '-' + document.documentElement.lang.toUpperCase();
-                    i18n.available = Object.keys(i18n.data);
+                    i18n.current = lang;
+
+                    if(config.lazy) {
+                        i18n.available.push(i18n.current);
+                    }else {
+                        i18n.available = Object.keys(i18n.data);
+                    }
                 })
                 .then(function() {
                     setTranslation();
@@ -96,5 +150,7 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         isLoaded: function isLoaded() {
             return i18n.active;
         }
-    }
+    };
+
+    return service;
 }];
