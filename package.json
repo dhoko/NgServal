@@ -1,24 +1,24 @@
 {
-  "name": "Boilerplate",
-  "version": "0.0.1",
-  "description": "Ng Starter app",
+  "name": "NgServal",
+  "version": "1.0.0",
+  "description": "AngularJS boilerplate with i18n, browserify and gulp",
   "repository": {
     "type": "git",
-    "url": "git://github.com/dhoko/boilerplate.git"
+    "url": "git://github.com/dhoko/NgServal.git"
   },
   "keywords": [
-    "html",
+    "angular",
     "JavaScript",
-    "CSS",
+    "browserify",
     "Gulp",
-    "angular"
+    "i18n"
   ],
   "author": "dhoko",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/dhoko/boilerplate/issues"
+    "url": "https://github.com/dhoko/NgServal/issues"
   },
-  "homepage": "https://github.com/dhoko/boilerplate",
+  "homepage": "https://github.com/dhoko/NgServal",
   "dependencies": {
     "angular": "^1.2.16",
     "angular-ui-router": "^0.2.10",

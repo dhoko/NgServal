@@ -1,24 +1,42 @@
-> It works with [Gulp](http://gulpjs.com) *The streaming build system*
+# NgServal
 
-## Install it
+A boilerplate for **AngularJS** with browserify and Gulp. It's ready for i18n with Yaml files.
 
-***You must have node***
+If you have [docker.js](http://jbt.github.io/docker/src/docker.js.html) you can also build your API documentation !
 
-- `git clone git@github.com:dhoko/boilerplate.git [folder]` (replace [folder] with a name, it is the destination folder)
-- `cd [folder]`
+## How to install ?
 
-### Prepare your environement (*First time, if you don't have bower|gulp|livereaload*)
+### Requirements
 
-- Install **Sublime Linter** in Sublime Text for JShint
-- Install LiveReload for Chrome [LiveReload Chrome Store](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
-- `make prepare` (*Install Gulp and Bower*)
+- node.js
+- npm
 
-### Install the boilerplate
+Ok, let's run : `npm install`
 
-- `make install` (*Install Gulp and bower dependencies*)
-- `gulp serve`
+### Not included:
 
-### Tasks
+- Magic code *oh noooes!*
+- Coffee *bad for your heart anyway*
+- Give you the opportunity to twiddle your thumbs *sorry buddy
 
-- `gulp serve` : livereload + server + open Chrome + build HTML&JS
-- `gulp deploy` : Push a zip of your app to your FTP
+### Included:
+
+- A structure
+- A great compilation process via Gulp
+- Browserify
+- Normalize.css
+- Moment.js
+- i18n
+- Documentation with [Docker](https://github.com/jbt/docker)
+- An HTTP server with [Express.js](http://expressjs.com/)
+- some helpers
+- ... all you need to begin a great app and being happy
+
+## Helpers
+
+Load the service `actions`, it provides you some helpers:
+
+- `actions.openPage(page,delay)`
+- `actions.reset(type, back2home)` :Clean your app's timeouts from actions.timeout. If back2home is true, it open the home page after `actions.TIMEOUT_BEFORE_HOME`
+- `actions.repeat(cb, delay, msg)` : setInterval
+- `actions.timeout(delay,cb,msg)` : setTimeout
