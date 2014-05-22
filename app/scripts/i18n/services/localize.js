@@ -50,7 +50,12 @@ module.exports = ['$rootScope', '$http','custom', function($rootScope, $http, cu
         if(i18n.data[lang]) {
             angular.extend(i18n.data[lang]['_common'], {languages: i18n.available});
             angular.extend(i18n.data[lang][page], i18n.data[lang]['_common']);
-            angular.extend($rootScope, i18n.data[lang][page]);
+
+            if(config.namespace) {
+                $rootScope[config.namespace] = i18n.data[lang][page];
+            }else {
+                angular.extend($rootScope, i18n.data[lang][page]);
+            }
             console.log("[i18n-i18n@setTranslation] Load your translation with the current lang : ",i18n.current);
         }
     }
@@ -105,9 +110,7 @@ module.exports = ['$rootScope', '$http','custom', function($rootScope, $http, cu
 
         load: function load(url, name) {
 
-                url = url || loadLazyDefaultUrl();
-
-            console.log(url)
+            url = url || loadLazyDefaultUrl();
 
             var lang = config.lang || document.documentElement.lang + '-' + document.documentElement.lang.toUpperCase();
 
