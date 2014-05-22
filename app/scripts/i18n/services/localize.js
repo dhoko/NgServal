@@ -9,7 +9,8 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         current: "",
         data: {},
         available: [],
-        currentState: ""
+        currentState: "",
+        active: false
     };
 
     /**
@@ -23,6 +24,7 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         page = page || 'home';
         i18n.currentState = page;
         lang = i18n.current;
+        i18n.active = true;
 
         if(i18n.data[lang]) {
             angular.extend(i18n.data[lang]['_common'], {languages: i18n.available});
@@ -63,8 +65,8 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
     });
 
     return {
-        load: function load(page) {
-            return $http.get('/i18n/languages.json')
+        load: function load(url) {
+            return $http.get(url || '/i18n/languages.json')
                 .error(function() {
                     alert("Cannot load i18n translation file");
                 })
@@ -74,7 +76,7 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
                     i18n.available = Object.keys(i18n.data);
                 })
                 .then(function() {
-                    setTranslation(page);
+                    setTranslation();
                 });
         },
 
@@ -90,6 +92,9 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
             return i18n.current;
         },
         updateState: setTranslation,
-        updateLang: loadLanguage
+        updateLang: loadLanguage,
+        isLoaded: function isLoaded() {
+            return i18n.active;
+        }
     }
 }];

@@ -11,8 +11,12 @@ angular.module('i18n', [])
 
         // Update the translation when you change a page
         $rootScope.$on('$stateChangeSuccess', function(e, toState) {
-            localize.updateState(toState.name);
+
+            // Prevent reload for the the home
+            if(!localize.isLoaded()) {
+                localize.updateState(toState.name);
+            }
         });
 
-        localize.load($state.current.name);
+        localize.load();
     }]);
