@@ -51,13 +51,15 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         i18n.current = lang;
 
         $rootScope.$emit('i18n:localize:changed', {
-            previous: old,
+            previous: (old + '-' + old.toUpperCase()),
             value: lang
         });
+
+        console.log('[i18n-i18n@loadLanguage] Update APP language from %s to %s', (old + '-' + old.toUpperCase()),lang);
     }
 
-    $rootScope.$on('i18n:localize:changed', function(d) {
-        console.log(d);
+    $rootScope.$on('i18n:localize:changed', function(e, data) {
+        setTranslation(i18n.currentState);
     });
 
     return {
@@ -77,7 +79,6 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         },
 
         get: function get(lang) {
-
             return angular.extend(i18n.data[lang || i18n.current][i18n.currentState] , i18n.data[lang || i18n.current]['_common']);
         },
 
@@ -88,6 +89,7 @@ module.exports = ['$rootScope', '$http', function($rootScope, $http) {
         current: function current() {
             return i18n.current;
         },
-        update: setTranslation
+        updateState: setTranslation,
+        updateLang: loadLanguage
     }
 }];

@@ -9,7 +9,7 @@ module.exports = ['localize', function(localize) {
         link: function(scope,el,attr) {
             el.on('click',function() {
                 scope.$apply(function() {
-                    localize.update(attr.i18nLoad);
+                    localize.updateLang(attr.i18nLoad);
                 });
             });
         }
