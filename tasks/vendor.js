@@ -14,8 +14,8 @@ module.exports = function() {
       gulp.src([
         dependencies + '/angular/lib/angular.min.js',
         dependencies + '/angular-ui-router/release/angular-ui-router.min.js',
-        dependencies + '/serval-i18n/bundle.js',
-        // dependencies + '/serval-i18n/bundle.min.js',
+        // dependencies + '/serval-i18n/bundle.js',
+        dependencies + '/serval-i18n/bundle.min.js',
         dependencies + '/moment/moment.js',
         dependencies + '/swiftclick/js/libs/swiftclick.js'
       ])
