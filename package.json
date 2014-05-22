@@ -26,6 +26,7 @@
     "body-parser": "^1.2.0",
     "event-stream": "~3.1.0",
     "express": "~3.4.8",
+    "extend": "^1.2.1",
     "gulp": "*",
     "gulp-concat": "~2.1.7",
     "gulp-convert": "*",

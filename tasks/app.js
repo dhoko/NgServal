@@ -26,6 +26,9 @@ module.exports = function(server) {
             .bundle({
                 debug: (gutil.env.type !== 'prod')
             })
+            .on("error", function(err) {
+                gutil.log("Browserify error:", err);
+            })
             .pipe(source("app.js"))
             .pipe(gulp.dest('./build/js'))
             .pipe(livereload(server));

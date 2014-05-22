@@ -58,18 +58,24 @@ API:
 
 ### i18n
 
+> It's working with [Angular UI-Router](https://github.com/angular-ui/ui-router/)
+
 Attach the module `i18n` to your app module, then before the application is loaded, we get the translations and store them inside the localize service.
 
 It's ok, your app is translated. Everything is inside the scope.
+When you change a page, we load the translation for this page.
 
 #### Service localize
 
 API:
 
 - 'localize.load(url)': Load a translation (default url = i18n/languages.json)
-- 'localize.get(lang)': Return all translation for a lang
+- 'localize.get(lang)': Return all translations for a lang per state
+- 'localize.all(lang)': Return all translations for a lang
 - 'localize.current()': Return the current lang
-- 'localize.update(lang)': Load new translation for a lang
+- 'localize.updateLang(lang)': Load new translation for a lang in your app
+- 'localize.updateState(state)': Bind current translation for a state
+- 'localize.isLoaded()': Detect if your i18n is loaded
 
 #### Filter translate
 
@@ -101,6 +107,70 @@ Attach this directive to a button in order to load a translation, for your appli
 <button type="button" data-i18n-load="en-EN">Load english translation for the app</button>
 ```
 
+#### Yaml for the i18n
+
+To translate your app, go inside the directory i18n. Then create a directory for your language.
+
+***You must respect a convention for the directory***
+> Language are defined with a `-` as defined inside the [BCP 47](http://tools.ietf.org/html/bcp47). cf [Value of the HTML5 lang attribute](http://webmasters.stackexchange.com/questions/28307/value-of-the-html5-lang-attribute). So the directory will be `fr-FR`
+
+
+Then create a file pet state (page) in your app.
+With *gulp* we will concatenate each translation and build a JSON, ex:
+
+```json
+{
+  "fr-FR": {
+    "_common": {
+      "lang": "Français",
+      "back": "Page précédente"
+    },
+    "home": {
+      "title": "Bienvenue petit papillon de lumière !",
+      "baseline": "Bienvenue sur",
+      "baselineInfo": "Serval-boilerplate avec Backbone.js",
+      "includes": "Tu peux désormais coder. Tu disposes de :",
+      "launchApp": "Ouvre une console et saisi cette commande :",
+      "aboutTpl": "On utilise une  version customisée du template lodash cf:",
+      "aboutTpl2": "Tu peux modifier ça dans la variable templateSettings, on trouve ça dans ce fichier",
+      "aboutLink": "Tu peux aller à la page suivante avec ce lien : ",
+      "aboutLink2": "ou, en utilisant ce bouton avec un event",
+      "aboutAnchor": "avec une ancre",
+      "buttonMsg": "Page suivante"
+    },
+    "welcome": {
+      "message": "coucou"
+    }
+  },
+  "en-EN": {
+    "_common": {
+      "lang": "English",
+      "back": "Previous page"
+    },
+    "home": {
+      "title": "Hi little butterfly !",
+      "baseline": "Welcome to",
+      "baselineInfo": "Serval Boilerplate with Backbone.js",
+      "includes": "You're ready to code. It includes",
+      "launchApp": "Open a terminal and run",
+      "aboutTpl": "It uses a custom lodash templating cf:",
+      "aboutTpl2": "You can of course remove these templateSettings, it's located inside",
+      "aboutLink": "You can access to another page here ",
+      "aboutLink2": "or, use a button with an event listener.",
+      "aboutAnchor": "with an anchor",
+      "buttonMsg": "Next page"
+    },
+    "welcome": {
+      "message": "hey"
+    }
+  }
+}
+```
+
+##### Share translation between pages
+
+If you want to share key between pages in your application, add them to a `_common.yml`.
+
 ## Explanation
 
 ```shell
@@ -112,7 +182,9 @@ Attach this directive to a button in order to load a translation, for your appli
 ├── package.json
 ├── build // final files
 ├── i18n // for i18n
-    ├── fr-FR.yml // A translation
+    ├── fr-FR // A translation
+        ├── _common.yml // i18n shared between each pages
+        └── home.yml // i18n for the home page
     └── languages.json // i18n translations (build with gulp)
 ├── app // where you code
     ├── layout // Your app layout (header,footer...)
