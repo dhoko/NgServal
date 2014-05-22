@@ -1,6 +1,6 @@
 title: 'Hi little butterfly !'
 baseline: Welcome to
-baselineInfo: Serval Boilerplate with Backbone.js
+baselineInfo: NgServal
 includes: "You're ready to code. It includes"
 launchApp: "Open a terminal and run"
 aboutTpl: "It uses a custom lodash templating cf:"

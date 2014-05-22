@@ -1,6 +1,6 @@
 title: "Bienvenue petit papillon de lumière !"
 baseline: "Bienvenue sur"
-baselineInfo: "Serval-boilerplate avec Backbone.js"
+baselineInfo: "NgServal"
 includes: "Tu peux désormais coder. Tu disposes de :"
 launchApp: "Ouvre une console et saisi cette commande :"
 aboutTpl: "On utilise une  version customisée du template lodash cf:"

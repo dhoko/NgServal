@@ -27,6 +27,7 @@
     "event-stream": "~3.1.0",
     "express": "~3.4.8",
     "gulp": "*",
+    "gulp-angular-htmlify": "0.0.8",
     "gulp-concat": "~2.1.7",
     "gulp-convert": "*",
     "gulp-json-editor": "^2.0.2",

@@ -1,7 +1,7 @@
 var i18n = require('../i18n/i18n');
     helpers = require('../helpers/helpers');
 
-var core = angular.module('ngStarter', ['ui.router','i18n','helpers']);
+var core = angular.module('ngServal', ['ui.router','i18n','helpers']);
 
 core.config(require('./coreConfig'))
     .controller("rootCtrl", require('./controllers/root'))
