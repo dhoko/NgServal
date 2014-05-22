@@ -18,7 +18,8 @@ module.exports = ['$rootScope', '$http','custom', function($rootScope, $http, cu
      * @type {Object}
      */
     var config = {
-        lang: 'en-EN',
+        state: "home",
+        lang: "en-EN",
         url: "/i18n/languages.json",
         namespace: "",
         lazy: false,
@@ -42,7 +43,7 @@ module.exports = ['$rootScope', '$http','custom', function($rootScope, $http, cu
      */
     function setTranslation(page) {
 
-        page = page || 'home';
+        page = page || config.state;
         i18n.currentState = page;
         lang = i18n.current;
         i18n.active = true;
