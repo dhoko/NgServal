@@ -6,13 +6,13 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
   $stateProvider
     .state('home', {
       url : '/',
-      templateUrl: 'partials/core-root.html',
+      templateUrl: 'partials/core-home.html',
       controller : 'rootCtrl'
       })
 
     .state('welcome', {
       url : '/welcome',
-      templateUrl: "partials/core-home.html",
+      templateUrl: "partials/core-welcome.html",
       controller : 'welcomeCtrl'
     });
 
