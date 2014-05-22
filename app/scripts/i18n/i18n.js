@@ -7,6 +7,7 @@ angular.module('i18n', [])
     .directive('i18nLoad', require('./directives/i18nLoad'))
     .directive('i18nBind', require('./directives/i18nBind'))
     .filter('translate', require('./filters/translate'))
-    .run(['localize', function(localize) {
-        localize.load();
+    .run(['localize', '$state', function(localize, $state) {
+        // console.log($state);
+        localize.load($state.current.name);
     }]);

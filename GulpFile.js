@@ -60,7 +60,6 @@ gulp.task('default',['assets','vendor','layout','templates','scripts','styles','
         watchThemAll("./app/scripts/**/partials/*.html", ["templates"],true);
         watchThemAll("./app/layout/*.html", ["layout"],true);
         watchThemAll("./app/styles/*.css", ["styles"],true);
-        watchThemAll("./i18n/**/*.yml", ["i18n"],true);
     });
 
 });
@@ -86,7 +85,9 @@ gulp.task('assets',require('./tasks/assets'));
 gulp.task('vendor', require("./tasks/vendor"));
 
 // Create i18n file for the app
-gulp.task("i18n",require("./tasks/i18n"));
+gulp.task("i18n",function() {
+    require("./tasks/i18n")(server);
+});
 
 // Generate your documentation using docker
 gulp.task('doc', function(){
