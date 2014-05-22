@@ -1,7 +1,7 @@
 /**
  * Root Controller
  */
-module.exports = ['$scope','localize', function($scope, localize) {
+module.exports = ['$scope', function($scope) {
 
     // i18n.define('fr-FR');
     // console.log($scope.i18n)
