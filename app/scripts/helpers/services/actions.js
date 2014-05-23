@@ -3,16 +3,23 @@
  * It provides some actions for your application such as:
  *     - openPage(state)
  */
-module.exports = ['$state', function($state) {
+module.exports = ['$state', 'StateHistory', 'helpersConfig', function($state, StateHistory, helpersConfig) {
 
     var data = {
         timeouts: [],
         repeats: []
     };
 
+    // default configuration
+    var config = {
+        defaultState: "home",
+        timeoutBeforeHome: 60
+    };
+
+    angular.extend(config, helpersConfig);
 
     return {
-        TIMEOUT_BEFORE_HOME: 60,
+        TIMEOUT_BEFORE_HOME: config.timeoutBeforeHome,
         /**
          * Open a state after a custom delay or 0
          * @param  {String} dest  State destination
@@ -21,14 +28,25 @@ module.exports = ['$state', function($state) {
          */
         openPage: function openPage(dest, delay) {
 
+            var self = this;
+
             if(delay) {
                 return this.timeout(+delay, function() {
-                    $state.transitionTo(dest);
+                    $state.go(dest);
+                    self.sessionEnd(dest);
                 }, 'Open the page - ' + dest + ' in ' + delay + 's');
             }
 
             console.log("[Helpers-actions@openPage] : Open the page - " + dest);
-            $state.transitionTo(dest);
+            $state.go(dest);
+            this.sessionEnd(dest);
+        },
+
+        sessionEnd: function sessionEnd(dest) {
+
+            if(!StateHistory.isEmpty() && config.defaultState === dest) {
+                StateHistory.clear();
+            }
         },
 
         /**
@@ -69,15 +87,13 @@ module.exports = ['$state', function($state) {
                 data.timeouts.length = 0;
 
                 if(back2Home) {
-                    this.openPage('home', this.TIMEOUT_BEFORE_HOME);
+                    this.openPage(config.defaultState, this.TIMEOUT_BEFORE_HOME);
                 }
 
             }else{
                 data.repeats.forEach(window.clearInterval);
                 data.repeats.length = 0;
             }
-
-
         }
     };
 }];
