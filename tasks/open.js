@@ -8,10 +8,10 @@ var gulp  = require('gulp'),
 module.exports = function() {
 
     // Open Google Chrome @ localhost:8080
-    gulp.src('./app/index.html')
-      .pipe(opn("",{
-        // app:"google-chrome",
-        app:"chromium-browser",
-        url: "http://localhost:1337/app/"
-     }));
+    // gulp.src('./app/index.html')
+    //   .pipe(opn("",{
+    //     // app:"google-chrome",
+    //     app:"chromium-browser",
+    //     url: "http://localhost:1337/app/"
+    //  }));
 };

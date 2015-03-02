@@ -7,6 +7,8 @@ var fs          = require('fs'),
     streamqueue = require('streamqueue'),
     sourcemaps  = require('gulp-sourcemaps'),
     ngAnnotate  = require('gulp-ng-annotate');
+    browserSync = require('browser-sync');
+    reload      = browserSync.reload;
 
 /**
  * Create a single file app.js
@@ -55,5 +57,6 @@ module.exports = function() {
       preserveNewlines: true
     }))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./app/js'));
+    .pipe(gulp.dest('./app/js'))
+    .pipe(reload({stream: true}));
 };
