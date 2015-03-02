@@ -1,21 +1,20 @@
 var gulp        = require('gulp'),
-    path        = require('path'),
-    concat      = require("gulp-concat");
-    tap         = require('gulp-tap'),
-    rename      = require('gulp-rename'),
-    gutil       = require('gulp-util'),
-    htmlify = require('gulp-angular-htmlify');
+    htmlify = require('gulp-angular-htmlify'),
+    templateCache = require('gulp-angular-templatecache');
 
-
+/**
+ * Create a cache for angular templates
+ * Put some files in partials for compatibility
+ * @return {Stream}
+ */
 module.exports = function() {
-    gulp.src('./app/scripts/**/partials/*.html')
+    return gulp.src([
+          './src/partials/**/*.html'
+        ])
         .pipe(htmlify())
-        .pipe(tap(function (file) {
-            gutil.env.module = path.relative('./app/scripts/',file.path).split(path.sep)[0];
+        .pipe(gulp.dest('./app/partials/'))
+        .pipe(templateCache('templates.js', {
+            root: 'partials/'
         }))
-        .pipe(rename(function (path) {
-            path.dirname = '';
-            path.basename = gutil.env.module + '-' + path.basename;
-        }))
-        .pipe(gulp.dest('./build/partials/'));
+        .pipe(gulp.dest('./app/js'));
 }

@@ -1,38 +1,59 @@
-var gulp       = require('gulp'),
-    gutil      = require('gulp-util'),
-    watchify   = require("watchify"),
-    source     = require('vinyl-source-stream');
-    livereload = require('gulp-livereload');
+var fs          = require('fs'),
+    path        = require('path'),
+    gulp        = require('gulp'),
+    concat      = require("gulp-concat"),
+    plumber     = require('gulp-plumber'),
+    beautify    = require('gulp-beautify'),
+    streamqueue = require('streamqueue'),
+    sourcemaps  = require('gulp-sourcemaps'),
+    ngAnnotate  = require('gulp-ng-annotate');
 
 /**
  * Create a single file app.js
  */
-module.exports = function(server) {
+module.exports = function() {
 
-    // Concatenate your app and build an app.js
-    var bundler = watchify('./app/scripts/core/core.js');
+  'use strict';
 
-    bundler.on('update',rebundle);
+  /**
+   * List each directory iniside i18n directory
+   * From {@link https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md}
+   * @param  {String} dir Directory
+   * @return {Array}
+   */
+  function getFolders(dir) {
+    return fs.readdirSync(dir)
+      .filter(function(file) {
+        return fs.statSync(path.join(dir, file)).isDirectory();
+      });
+  }
 
-    function rebundle(file) {
+   var folders = getFolders('./src/js');
+   var stream = streamqueue({objectMode: true});
 
-        if(file) {
-            file.map(function (fileName) {
-                gutil.log('File updated', gutil.colors.yellow(fileName));
-            });
-        }
+   // Create a stream for each content of directory
+  for (var i = folders.length - 1; i >= 0; i--) {
 
-        return bundler
-            .bundle({
-                debug: (gutil.env.type !== 'prod')
-            })
-            .on("error", function(err) {
-                gutil.log("Browserify error:", err);
-            })
-            .pipe(source("app.js"))
-            .pipe(gulp.dest('./build/js'))
-            .pipe(livereload(server));
-    }
+    stream.queue(
+      gulp.src(['./src/js/' + folders[i] + '/index.js', './src/js/' + folders[i] + '/**/*.js'])
+        .pipe(plumber())
+        .pipe(concat(folders[i] + '.js',  {newLine: "\n"}))
+    );
+  }
 
-    return rebundle();
+  return stream.done()
+    .pipe(ngAnnotate({
+      add: true,
+      remove: true,
+      single_quotes: true
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(concat('app.js', {newLine: "\n"}))
+    .pipe(beautify({
+      indentSize: 2,
+      breakChainedMethods: true,
+      preserveNewlines: true
+    }))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./app/js'));
 };

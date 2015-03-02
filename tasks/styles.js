@@ -1,12 +1,14 @@
 var gulp   = require('gulp'),
-    concat = require("gulp-concat");
+    concat = require("gulp-concat"),
+    autoprefixer = require("gulp-autoprefixer");
 
 /**
  * Concat our CSS
  */
 module.exports = function() {
 
-    gulp.src('./app/styles/*.css')
+    gulp.src('./src/styles/*.css')
       .pipe(concat('main.css'))
-      .pipe(gulp.dest('./build/styles/'));
+      .pipe(autoprefixer())
+      .pipe(gulp.dest('./app/styles/'));
 };
