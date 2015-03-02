@@ -18,6 +18,8 @@ var path        = require("path"),
  */
 module.exports = function(server) {
 
+  'use strict';
+
     /**
      * List each directory iniside i18n directory
      * From {@link https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md}
@@ -33,6 +35,7 @@ module.exports = function(server) {
 
     var folders = getFolders('./i18n');
     var stream = streamqueue({objectMode: true});
+
 
     // Create a stream for each content of directory
     for (var i = folders.length - 1; i >= 0; i--) {
@@ -59,6 +62,6 @@ module.exports = function(server) {
             to: "json"
         }))
         .pipe(concat('languages.json'))
-        .pipe(gulp.dest("./i18n/"))
+        .pipe(gulp.dest("./app/i18n/"))
         .pipe(livereload(server));
 };

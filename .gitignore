@@ -1,4 +1,5 @@
 node_modules/
 build/
-app/components/
+app/
 i18n/languages.json
+bower_components/

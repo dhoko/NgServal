@@ -1,8 +1,8 @@
-var gulp        = require('gulp'),
-    concat      = require("gulp-concat");
+var gulp   = require('gulp'),
+    concat = require("gulp-concat");
 
 module.exports = function() {
-    gulp.src('./app/layout/layout.html')
+    gulp.src('./src/layout.html')
         .pipe(concat('index.html'))
-        .pipe(gulp.dest('./build/'));
+        .pipe(gulp.dest('./app/'));
 };
