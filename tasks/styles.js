@@ -1,7 +1,8 @@
 var gulp   = require('gulp'),
     concat = require("gulp-concat"),
     autoprefixer = require("gulp-autoprefixer");
-
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
 /**
  * Concat our CSS
  */
@@ -10,5 +11,7 @@ module.exports = function() {
     gulp.src('./src/styles/*.css')
       .pipe(concat('main.css'))
       .pipe(autoprefixer())
-      .pipe(gulp.dest('./app/styles/'));
+      .pipe(gulp.dest('./app/styles/'))
+      .pipe(reload({stream: true}));
+
 };

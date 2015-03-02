@@ -1,5 +1,7 @@
 var gulp        = require('gulp'),
-    htmlify = require('gulp-angular-htmlify'),
+    browserSync   = require('browser-sync'),
+    reload        = browserSync.reload,
+    htmlify       = require('gulp-angular-htmlify'),
     templateCache = require('gulp-angular-templatecache');
 
 /**
@@ -8,13 +10,14 @@ var gulp        = require('gulp'),
  * @return {Stream}
  */
 module.exports = function() {
-    return gulp.src([
-          './src/partials/**/*.html'
-        ])
-        .pipe(htmlify())
-        .pipe(gulp.dest('./app/partials/'))
-        .pipe(templateCache('templates.js', {
-            root: 'partials/'
-        }))
-        .pipe(gulp.dest('./app/js'));
+  return gulp.src([
+      './src/partials/**/*.html'
+    ])
+    .pipe(htmlify())
+    .pipe(gulp.dest('./app/partials/'))
+    .pipe(templateCache('templates.js', {
+      root: 'partials/'
+    }))
+    .pipe(gulp.dest('./app/js'))
+    .pipe(reload({stream: true}));
 }
