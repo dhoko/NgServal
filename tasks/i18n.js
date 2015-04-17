@@ -5,7 +5,8 @@ var path        = require("path"),
     convert     = require('gulp-convert'),
     tap         = require('gulp-tap'),
     streamqueue = require('streamqueue'),
-    livereload   = require('gulp-livereload');
+    browserSync = require('browser-sync'),
+    reload      = browserSync.reload;
 
 /**
  * Build a languages.json from our Yaml files from
@@ -16,7 +17,7 @@ var path        = require("path"),
  *
  * Than just a file with key value
  */
-module.exports = function(server) {
+module.exports = function() {
 
   'use strict';
 
@@ -63,5 +64,5 @@ module.exports = function(server) {
         }))
         .pipe(concat('languages.json'))
         .pipe(gulp.dest("./app/i18n/"))
-        .pipe(livereload(server));
+        .pipe(reload({stream: true}));
 };

@@ -7,7 +7,7 @@ var path        = require('path'),
     reload      = browserSync.reload;
 
 // Default task : Open url, lauch server, livereaload
-gulp.task('default',['assets','vendor','layout','templates','scripts','styles'], function() {
+gulp.task('default',['assets','vendor','layout','templates','scripts','styles', 'i18n'], function() {
 
   var app = express();
   app.use(bodyParser());
@@ -52,9 +52,7 @@ gulp.task('assets',require('./tasks/assets'));
 gulp.task('vendor', require("./tasks/vendor"));
 
 // Create i18n file for the app
-gulp.task("i18n",function() {
-    require("./tasks/i18n")(server);
-});
+gulp.task("i18n", require('./tasks/i18n'));
 
 
 // Set our env to production

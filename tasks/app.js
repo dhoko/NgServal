@@ -6,8 +6,8 @@ var fs          = require('fs'),
     beautify    = require('gulp-beautify'),
     streamqueue = require('streamqueue'),
     sourcemaps  = require('gulp-sourcemaps'),
-    ngAnnotate  = require('gulp-ng-annotate');
-    browserSync = require('browser-sync');
+    ngAnnotate  = require('gulp-ng-annotate'),
+    browserSync = require('browser-sync'),
     reload      = browserSync.reload;
 
 /**
