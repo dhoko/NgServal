@@ -1,13 +1,14 @@
-var fs          = require('fs'),
-    path        = require('path'),
-    gulp        = require('gulp'),
-    concat      = require("gulp-concat"),
+var gulp        = require('gulp'),
+    tap         = require('gulp-tap'),
+    gutil       = require('gulp-util'),
+    babel       = require('gulp-babel'),
+    concat      = require('gulp-concat'),
     plumber     = require('gulp-plumber'),
-    beautify    = require('gulp-beautify'),
-    streamqueue = require('streamqueue'),
+    uglify      = require('gulp-uglify'),
     sourcemaps  = require('gulp-sourcemaps'),
-    ngAnnotate  = require('gulp-ng-annotate'),
-    browserSync = require('browser-sync'),
+    cached      = require('gulp-cached'),
+    remember    = require('gulp-remember'),
+    browserSync = require('browser-sync');
     reload      = browserSync.reload;
 
 /**
@@ -17,46 +18,40 @@ module.exports = function() {
 
   'use strict';
 
-  /**
-   * List each directory iniside i18n directory
-   * From {@link https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md}
-   * @param  {String} dir Directory
-   * @return {Array}
-   */
-  function getFolders(dir) {
-    return fs.readdirSync(dir)
-      .filter(function(file) {
-        return fs.statSync(path.join(dir, file)).isDirectory();
-      });
+  function isDist(cb, opt) {
+    if(gutil.env.dist) {
+      return cb(opt);
+    }
+
+    return gutil.noop();
   }
 
-   var folders = getFolders('./src/js');
-   var stream = streamqueue({objectMode: true});
+  function isNotDist(cb, opt) {
+    if(!gutil.env.dist) {
+      return cb(opt);
+    }
 
-   // Create a stream for each content of directory
-  for (var i = folders.length - 1; i >= 0; i--) {
-
-    stream.queue(
-      gulp.src(['./src/js/' + folders[i] + '/index.js', './src/js/' + folders[i] + '/**/*.js'])
-        .pipe(plumber())
-        .pipe(concat(folders[i] + '.js',  {newLine: "\n"}))
-    );
+    return gutil.noop();
   }
 
-  return stream.done()
-    .pipe(ngAnnotate({
-      add: true,
-      remove: true,
-      single_quotes: true
+
+  return gulp
+    .src([
+      './src/js/**/index.js',
+      './src/js/**/**/*.js'
+    ])
+    .pipe(plumber())
+    .pipe(cached())
+    .pipe(isNotDist(sourcemaps.init))
+    .pipe(babel())
+    .pipe(remember())
+    .pipe(concat('app.js'))
+    .pipe(isDist(uglify, {
+      output: {
+        quote_style: 1
+      }
     }))
-    .pipe(sourcemaps.init())
-    .pipe(concat('app.js', {newLine: "\n"}))
-    .pipe(beautify({
-      indentSize: 2,
-      breakChainedMethods: true,
-      preserveNewlines: true
-    }))
-    .pipe(sourcemaps.write())
+    .pipe(isNotDist(sourcemaps.write, './'))
     .pipe(gulp.dest('./app/js'))
     .pipe(reload({stream: true}));
 };
