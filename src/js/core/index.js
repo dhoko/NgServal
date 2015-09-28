@@ -2,6 +2,7 @@ angular.module('core', [
   'ui.router',
   'ngAria',
   'ngBabelfish',
+  'templates',
   'about'
   ])
   .config(($stateProvider, $urlRouterProvider, babelfishProvider) => {

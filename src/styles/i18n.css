@@ -1,0 +1,6 @@
+.i18n-nav {
+  float: right;
+  margin: 0;
+  padding: 0
+}
+.i18n-item {display: inline-block}

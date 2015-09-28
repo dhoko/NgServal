@@ -1,5 +1,5 @@
-angular
-  .module('listApp', () => {
+angular.module('about')
+  .directive('listApp', () => {
 
     'use strict';
 
