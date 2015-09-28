@@ -1,15 +1,12 @@
 # NgServal
 
-A boilerplate for **AngularJS** with browserify and Gulp. It's ready for i18n with Yaml files.
-
-If you have [docker.js](http://jbt.github.io/docker/src/docker.js.html) you can also build your API documentation !
+A custom boilerplate for AngularJS, ready for i18n out of the box.
 
 ## How to install ?
 
 ### Requirements
 
-- node.js, npm
-- bower
+- node.js with npm
 
 Ok, let's run : `npm install`
 
@@ -21,26 +18,16 @@ $ npm start
 
 ## About ngServal
 
-- A structure
+- A structure based on component
+- ES2015 ready thanks to ba(*bi*)bel
 - A great compilation process via Gulp
-- Browserify
-- Normalize.css
-- Moment.js
-- i18n
-- Documentation with [Docker](https://github.com/jbt/docker)
-- An HTTP server with [Express.js](http://expressjs.com/)
-- some helpers
-- ... all you need to begin a great app and being happy
-
-### Not included:
-
-- Magic code *oh noooes!*
-- Coffee *bad for your heart anyway*
-- Give you the opportunity to twiddle your thumbs *sorry buddy
-
+- i18n via [Angular NgBabelfish](https://github.com/dhoko/angular-ngBabelfish)
+- An HTTP server with [Express.js](http://expressjs.com/) and browser-sync
+- ...
 
 ## i18n
 
+It's working via Yaml files.
 See documentation for [Angular NgBabelfish](https://github.com/dhoko/angular-ngBabelfish).
 
 ## Explanation
@@ -49,29 +36,27 @@ See documentation for [Angular NgBabelfish](https://github.com/dhoko/angular-ngB
 .
 ├── GulpFile.js
 ├── README.md
-├── .jshintrc
+├── .eslintrc
 ├── .editorconfig
 ├── package.json
-├── build // final files
+├── app // final files
 ├── i18n // for i18n
-    ├── fr-FR // A translation
-        ├── _common.yml // i18n shared between each pages
-        └── home.yml // i18n for the home page
-    └── languages.json // i18n translations (build with gulp)
+  ├── fr-FR // A translation
+    ├── _common.yml // i18n shared between each pages
+    └── home.yml // i18n for the home page
+  └── languages.json // i18n translations (build with gulp)
 ├── src // where you code
-    ├── layout.html // Your app layout (header,footer...)
-    ├── styles // Your css
-    ├── assets // static files
-    └── js // Your backbone app
-        └── core // The module Application
-            └── partials // HTML partials for core module
-└── tasks // Directory for each of your gulp tasjs
-```
-
-## Documentation
-
-```
-$ gulp doc
+  ├── layout.html // Your app layout (header,footer...)
+  ├── styles // Your css
+  ├── assets // static files
+  └── js // Your app
+    └── core // Core module for your application (no custom code here except some routing and interceptors)
+      └── partials // HTML partials for core module
+        └── state // views for a state
+    └── about // Ex component
+      └── partials // HTML partials for the component
+        └── state // views for a state
+└── tasks // Directory for each of your gulp tasks
 ```
 
 ## About the gulpFile.js
@@ -92,11 +77,9 @@ The gulpFile contains our tasks in order to built|dev the application, there are
 
 ### default task, to dev
 
-This task will start a server with express.js, it will start the server and open the browser to : `http://localhost:8080/build/`.
-
-It also provides you a wrappper for an API, `http://localhost:8080/apitest`, it can be access throught POST|GET|DELETE|PUT|PATCH... Any http request you want.
-
-This task launch liverload, so you have to install [Livereload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei) in your browser.
+It runs a server with two urls:
+  - [localhost:1337](http://locahost:1337/) based on express without livereload
+  - [localhost:3000](http://locahost:3000/) a proxy of :1337 with browser-sync (*livereload*)
 
 
 ### Other tasks

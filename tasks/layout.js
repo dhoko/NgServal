@@ -1,7 +1,7 @@
-var gulp   = require('gulp'),
+var gulp        = require('gulp'),
+    concat      = require('gulp-concat'),
     browserSync = require('browser-sync'),
-    reload      = browserSync.reload,
-    concat      = require("gulp-concat");
+    reload      = browserSync.reload;
 
 module.exports = function() {
   gulp.src('./src/layout.html')
